@@ -2,6 +2,8 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -29,16 +31,20 @@ logger = logging.getLogger(__name__)
 class ClassListView(generics.ListAPIView):
     queryset = FitnessClass.objects.filter(date_time__gte=now()).order_by('date_time')
     serializer_class = FitnessClassSerializer
+    permission_classes = [IsAuthenticated] 
+    
+    def get_serializer_context(self):
+        # pass request so serializer can access query params
+        return {"request": self.request}
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         logger.info(f"GET /classes/ response: {response.data}")
         return response
-
 # ------------------ API: Book Class ------------------
 class BookClassView(generics.CreateAPIView):
     serializer_class = BookingSerializer
-
+    permission_classes = [IsAuthenticated] 
     def post(self, request, *args, **kwargs):
         class_id = request.data.get('class_id')
         client_name = request.data.get('client_name')
@@ -73,13 +79,19 @@ class BookClassView(generics.CreateAPIView):
 # ------------------ API: View User Bookings ------------------
 class UserBookingsView(generics.ListAPIView):
     serializer_class = BookingSerializer
-
+    permission_classes = [IsAuthenticated] 
+    
     def get_queryset(self):
         email = self.request.query_params.get('email', '').strip()
-        logger.info(f"GET /bookings/ for email={email}")
+        timezone = self.request.query_params.get('timezone', '').strip()
+        logger.info(f"GET /bookings/ for email={email} /for timezone={timezone}")
         if not email:
             return Booking.objects.none()
         return Booking.objects.filter(client_email=email)
+    
+    def get_serializer_context(self):
+        # pass request so serializer can access query params
+        return {"request": self.request}
 
     def list(self, request, *args, **kwargs):
         email = self.request.query_params.get('email', '').strip()
