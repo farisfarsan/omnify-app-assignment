@@ -1,0 +1,2 @@
+docker run -v $(pwd)/db.sqlite3:/app/db.sqlite3 -p 8000:8000 omnify-app-2
+docker build -t omnify-app-2 .
