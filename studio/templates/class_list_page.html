@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Classes - Fitness Studio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .class-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .class-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    .class-card h3 {
+      margin: 0 0 10px;
+      color: #2c3e50;
+    }
+    .class-card p {
+      margin: 5px 0;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Available Classes</h1>
+  <div class="class-list">
+    {% for c in classes %}
+      <div class="class-card">
+        <h3>{{ c.name }}</h3>
+        <p><strong>Instructor:</strong> {{ c.instructor }}</p>
+        <p><strong>Date:</strong> {{ c.date_time }}</p>
+        <p><strong>Total Slots:</strong> {{ c.total_slots }}</p>
+        <p><strong>Available:</strong> {{ c.available_slots }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
