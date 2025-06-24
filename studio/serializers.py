@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from .models import FitnessClass, Booking
 import pytz
-# from django.utils.timezone import localtime
-
 
 class FitnessClassSerializer(serializers.ModelSerializer):
     date_time = serializers.SerializerMethodField()
